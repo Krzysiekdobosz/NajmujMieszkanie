@@ -1,0 +1,1 @@
+import{z as o}from"./index-BaovNk5S.js";const a={list:s=>o.get("/conversations",{params:s}),show:s=>o.get(`/conversations/${s}`),start:s=>o.post("/conversations",s),send:(s,e)=>o.post(`/conversations/${s}/messages`,{body:e}),markRead:s=>o.patch(`/conversations/${s}/messages/read`)};export{a as c};

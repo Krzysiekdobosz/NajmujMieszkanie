@@ -1,0 +1,1 @@
+import{z as t}from"./index-BaovNk5S.js";const n={list:e=>t.get("/property-viewings",{params:e}),book:e=>t.post("/property-viewings",e),cancel:e=>t.delete(`/property-viewings/${e}`),ownerList:e=>t.get("/owner/viewings",{params:e}),ownerUpdateStatus:(e,i,o)=>t.patch(`/owner/viewings/${e}/status`,{status:i,owner_note:o})};export{n as v};

@@ -1,0 +1,1 @@
+import{o as s,j as n,A as t,n as l}from"./index-BaovNk5S.js";const d={__name:"BaseBadge",props:{variant:{type:String,default:"gray"}},setup(e){const a={green:"badge-green",yellow:"badge-yellow",red:"badge-red",blue:"badge-blue",gray:"badge-gray"};return(r,o)=>(s(),n("span",{class:l(a[e.variant]??"badge-gray")},[t(r.$slots,"default")],2))}};export{d as _};
