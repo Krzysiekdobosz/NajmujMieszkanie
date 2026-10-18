@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Notification extends Model
 {
-    public $timestamps = false;
-    public $created_at = true;
+    // Tabela ma tylko kolumnę created_at.
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'user_id', 'type', 'title', 'body', 'data', 'is_read', 'read_at',

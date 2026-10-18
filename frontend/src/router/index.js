@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import publicRoutes from './routes/public'
 import authRoutes   from './routes/auth'
@@ -16,7 +16,10 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  // GitHub Pages nie obsługuje przekierowań SPA, więc demo używa adresów z #.
+  history: import.meta.env.VITE_DEMO === 'true'
+    ? createWebHashHistory(import.meta.env.BASE_URL)
+    : createWebHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition

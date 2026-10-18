@@ -5,12 +5,17 @@ namespace App\Http\Controllers\Api\Owner;
 use App\Enums\ViewingStatus;
 use App\Http\Controllers\Api\ApiController;
 use App\Models\PropertyViewing;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class ViewingController extends ApiController
 {
+    public function __construct(private NotificationService $notifications)
+    {
+    }
+
     public function index(Request $request): JsonResponse
     {
         $viewings = PropertyViewing::where('owner_id', $request->user()->id)
@@ -38,12 +43,21 @@ class ViewingController extends ApiController
             'owner_note' => ['nullable', 'string', 'max:500'],
         ]);
 
-        $viewing = PropertyViewing::where('owner_id', $request->user()->id)->findOrFail($id);
+        $viewing = PropertyViewing::where('owner_id', $request->user()->id)
+            ->with('property:id,title')
+            ->findOrFail($id);
 
         $viewing->update([
             'status' => $request->status,
             'owner_note' => $request->owner_note,
         ]);
+
+        $title = $viewing->property?->title ?? '';
+        match ($viewing->status) {
+            ViewingStatus::Accepted => $this->notifications->viewingAccepted($viewing->user_id, $title, $viewing->id),
+            ViewingStatus::Rejected => $this->notifications->viewingRejected($viewing->user_id, $title, $viewing->id),
+            default => null,
+        };
 
         return $this->success(null, 'Status rezerwacji zaktualizowany.');
     }

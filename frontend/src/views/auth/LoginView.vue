@@ -19,6 +19,18 @@ const { message, fieldError, setErrors, clearErrors } = useApiErrors()
 const form = ref({ email: '', password: '' })
 const loading = ref(false)
 
+const isDemo = import.meta.env.VITE_DEMO === 'true'
+const demoAccounts = [
+  { label: 'Najemca', email: 'user@example.com' },
+  { label: 'Właściciel', email: 'owner@example.com' },
+  { label: 'Administrator', email: 'admin@example.com' },
+]
+
+function loginAs(account) {
+  form.value = { email: account.email, password: 'password' }
+  handleSubmit()
+}
+
 async function handleSubmit() {
   clearErrors()
   loading.value = true
@@ -50,6 +62,20 @@ async function handleSubmit() {
           Nie masz konta?
           <RouterLink to="/auth/rejestracja" class="text-primary-600 hover:underline font-medium">Zarejestruj się</RouterLink>
         </p>
+      </div>
+
+      <div v-if="isDemo" class="card p-4 mb-4 bg-primary-50 border-primary-100">
+        <p class="text-sm font-medium text-primary-800 mb-2">Wersja demo – zaloguj się kontem testowym:</p>
+        <div class="flex flex-wrap gap-2">
+          <BaseButton
+            v-for="account in demoAccounts"
+            :key="account.email"
+            variant="secondary"
+            size="sm"
+            :disabled="loading"
+            @click="loginAs(account)"
+          >{{ account.label }}</BaseButton>
+        </div>
       </div>
 
       <div class="card p-8">

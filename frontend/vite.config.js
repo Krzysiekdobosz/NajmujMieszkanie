@@ -2,7 +2,9 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  // Wersja demo jest publikowana na GitHub Pages pod /NajmujMieszkanie/.
+  base: mode === 'demo' ? '/NajmujMieszkanie/' : '/',
   plugins: [vue()],
   resolve: {
     alias: {
@@ -18,4 +20,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

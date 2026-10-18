@@ -21,7 +21,7 @@ class PropertyController extends ApiController
     {
         $properties = Property::with(['owner:id,name,email', 'images'])
             ->when($request->status, fn($q, $s) => $q->where('status', $s))
-            ->when($request->search, fn($q, $s) => $q->where('title', 'like', "%$s%")->orWhere('city', 'like', "%$s%"))
+            ->when($request->search, fn($q, $s) => $q->where(fn($w) => $w->where('title', 'like', "%$s%")->orWhere('city', 'like', "%$s%")))
             ->when($request->type, fn($q, $t) => $q->where('property_type', $t))
             ->orderByDesc('created_at')
             ->paginate(20);

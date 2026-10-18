@@ -25,7 +25,8 @@ defineEmits(['update:modelValue'])
       :class="['form-input', error ? 'form-input-error' : '']"
       @change="$emit('update:modelValue', $event.target.value)"
     >
-      <option value="" disabled>{{ placeholder }}</option>
+      <!-- Gdy lista ma własną opcję z pustą wartością (np. „Wszystkie”), placeholder byłby zdublowany -->
+      <option v-if="!options.some(opt => (opt.value ?? opt) === '')" value="" disabled>{{ placeholder }}</option>
       <option v-for="opt in options" :key="opt.value ?? opt" :value="opt.value ?? opt">
         {{ opt.label ?? opt }}
       </option>

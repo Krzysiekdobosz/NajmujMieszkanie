@@ -14,16 +14,19 @@ const recentProps = ref([])
 
 onMounted(async () => {
   try {
-    const [propsRes, viewRes] = await Promise.all([
+    // Liczniki bierzemy z meta.total, a nie z pierwszej strony wyników.
+    const [propsRes, publishedRes, pendingRes, viewRes] = await Promise.all([
       propertyService.ownerList({ per_page: 5 }),
+      propertyService.ownerList({ status: 'published', per_page: 1 }),
+      propertyService.ownerList({ status: 'pending', per_page: 1 }),
       viewingService.ownerList({ status: 'pending', per_page: 5 }),
     ])
 
     const allProps = propsRes.data
     recentProps.value = allProps.data?.slice(0, 5) || []
     stats.value.total     = allProps.meta?.total || 0
-    stats.value.published = allProps.data?.filter(p => p.status === 'published').length || 0
-    stats.value.pending   = allProps.data?.filter(p => p.status === 'pending').length || 0
+    stats.value.published = publishedRes.data.meta?.total || 0
+    stats.value.pending   = pendingRes.data.meta?.total || 0
     viewings.value = viewRes.data.data || []
     stats.value.viewings = viewRes.data.meta?.total || 0
   } finally {

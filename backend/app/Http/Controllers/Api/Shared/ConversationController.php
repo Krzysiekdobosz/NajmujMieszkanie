@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Api\Shared;
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Conversation;
 use App\Models\Property;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ConversationController extends ApiController
 {
+    public function __construct(private NotificationService $notifications)
+    {
+    }
+
     public function index(Request $request): JsonResponse
     {
         $user = $request->user();
@@ -57,6 +62,7 @@ class ConversationController extends ApiController
                 'body' => $request->message,
             ]);
             $existing->update(['last_message_at' => now()]);
+            $this->notifications->newMessage($existing->owner_id, $request->user()->name, $existing->id);
             return $this->created(['conversation_id' => $existing->id], 'Wiadomość wysłana.');
         }
 
@@ -71,6 +77,8 @@ class ConversationController extends ApiController
             'sender_id' => $request->user()->id,
             'body' => $request->message,
         ]);
+
+        $this->notifications->newMessage($conversation->owner_id, $request->user()->name, $conversation->id);
 
         return $this->created(['conversation_id' => $conversation->id], 'Wiadomość wysłana.');
     }

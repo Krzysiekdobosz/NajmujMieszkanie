@@ -1,11 +1,15 @@
 import axios from 'axios'
 
+const isDemo = import.meta.env.VITE_DEMO === 'true'
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: isDemo ? '/api/v1' : import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
+  // W wersji demo (GitHub Pages) API działa w przeglądarce na danych testowych.
+  ...(isDemo ? { adapter: (config) => import('@/demo/adapter').then((m) => m.demoAdapter(config)) } : {}),
 })
 
 api.interceptors.request.use((config) => {
@@ -21,7 +25,9 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token')
-      window.location.href = '/auth/logowanie'
+      window.location.href = isDemo
+        ? `${import.meta.env.BASE_URL}#/auth/logowanie`
+        : '/auth/logowanie'
     }
     return Promise.reject(error)
   }

@@ -16,8 +16,9 @@ export const adminService = {
   contactShow:    (id)     => api.get(`/admin/contact-messages/${id}`),
   contactStatus:  (id, status, note) => api.patch(`/admin/contact-messages/${id}/status`, { status, admin_note: note }),
 
-  // Blog
+  // Strony statyczne
   pages:       () => api.get('/admin/pages'),
+  pageShow:    (id) => api.get(`/admin/pages/${id}`),
   pageUpdate:  (id, data) => api.put(`/admin/pages/${id}`, data),
 
   // Ustawienia

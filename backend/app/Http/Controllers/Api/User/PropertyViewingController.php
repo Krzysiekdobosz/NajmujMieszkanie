@@ -6,12 +6,17 @@ use App\Enums\ViewingStatus;
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Property;
 use App\Models\PropertyViewing;
+use App\Services\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PropertyViewingController extends ApiController
 {
+    public function __construct(private NotificationService $notifications)
+    {
+    }
+
     public function index(Request $request): JsonResponse
     {
         $viewings = PropertyViewing::where('user_id', $request->user()->id)
@@ -52,6 +57,8 @@ class PropertyViewingController extends ApiController
             'note' => $request->note,
             'status' => ViewingStatus::Pending->value,
         ]);
+
+        $this->notifications->newViewing($property->user_id, $request->user()->name, $property->title, $viewing->id);
 
         return $this->created($this->format($viewing->load(['property:id,title,slug', 'owner:id,name,phone'])), 'Prośba o oglądanie wysłana.');
     }

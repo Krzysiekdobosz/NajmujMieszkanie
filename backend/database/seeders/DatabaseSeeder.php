@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             SettingSeeder::class,
             PropertySeeder::class,
+            BlogSeeder::class,
+            DemoActivitySeeder::class,
         ]);
     }
 }

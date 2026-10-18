@@ -4,11 +4,16 @@ namespace App\Http\Controllers\Api\Shared;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Conversation;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class MessageController extends ApiController
 {
+    public function __construct(private NotificationService $notifications)
+    {
+    }
+
     public function store(Request $request, int $id): JsonResponse
     {
         $request->validate(['body' => ['required', 'string', 'max:2000']]);
@@ -25,6 +30,9 @@ class MessageController extends ApiController
         ]);
 
         $conversation->update(['last_message_at' => now()]);
+
+        $recipientId = $conversation->user_id === $user->id ? $conversation->owner_id : $conversation->user_id;
+        $this->notifications->newMessage($recipientId, $user->name, $conversation->id);
 
         return $this->created([
             'id' => $message->id,

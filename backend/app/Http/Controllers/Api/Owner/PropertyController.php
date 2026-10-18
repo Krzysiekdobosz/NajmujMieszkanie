@@ -26,7 +26,7 @@ class PropertyController extends ApiController
             ->withCount(['favorites', 'viewings', 'conversations'])
             ->when($request->status, fn($q, $s) => $q->where('status', $s))
             ->latest()
-            ->paginate(15);
+            ->paginate(min((int) $request->input('per_page', 15), 100));
 
         return $this->paginated($properties, PropertyResource::collection($properties));
     }

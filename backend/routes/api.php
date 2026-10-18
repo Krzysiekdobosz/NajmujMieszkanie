@@ -96,6 +96,7 @@ Route::prefix('v1')->group(function () {
             Route::post('contracts',              [ContractController::class, 'store']);
             Route::get('contracts/{id}',          [ContractController::class, 'show']);
             Route::get('contracts/{id}/download', [ContractController::class, 'download']);
+            Route::patch('contracts/{id}/status', [ContractController::class, 'updateStatus']);
 
             Route::get('payments',                [PaymentController::class, 'index']);
             Route::post('payments',               [PaymentController::class, 'store']);
@@ -124,6 +125,7 @@ Route::prefix('v1')->group(function () {
             Route::delete('blog-posts/{id}',             [AdminBlogPostController::class, 'destroy']);
 
             Route::get('pages',                          [AdminPageController::class, 'index']);
+            Route::get('pages/{id}',                     [AdminPageController::class, 'show']);
             Route::put('pages/{id}',                     [AdminPageController::class, 'update']);
 
             Route::get('settings',                       [SettingController::class, 'index']);

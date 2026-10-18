@@ -2,6 +2,12 @@
 
 Webowa aplikacja do wynajmu mieszkań i pokoi w Polsce. Projekt zaliczeniowy.
 
+**Demo online:** https://krzysiekdobosz.github.io/NajmujMieszkanie/
+
+Wersja demo działa w całości w przeglądarce, na danych testowych (bez backendu). Odpowiedzi API są
+symulowane w tym samym formacie co Laravel (`frontend/src/demo`), a zmiany zapisują się w `localStorage`.
+Na stronie logowania można jednym kliknięciem wejść jako najemca, właściciel lub administrator.
+
 ---
 
 ## Stack technologiczny
@@ -149,3 +155,23 @@ VITE_APP_URL=http://localhost:5173
 | 26 | Bezpieczeństwo | Sanctum Bearer Token, throttle na auth endpointach, `LogActivity` middleware, `ActivityLogController` |
 
 ---
+
+## Testy
+
+```bash
+cd backend
+php artisan test
+```
+
+Testy funkcjonalne obejmują m.in. generowanie umów PDF, płatności, powiadomienia i uprawnienia panelu właściciela.
+
+## Wersja demo
+
+```bash
+cd frontend
+npm run build:demo   # build z symulowanym API, base: /NajmujMieszkanie/
+npx vite preview --mode demo
+```
+
+Publikacja na GitHub Pages: `npm run deploy:demo` (gałąź `gh-pages`).
+

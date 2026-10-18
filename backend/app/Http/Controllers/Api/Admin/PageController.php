@@ -21,6 +21,15 @@ class PageController extends ApiController
         return $this->success($pages);
     }
 
+    public function show(int $id): JsonResponse
+    {
+        $page = Page::findOrFail($id);
+
+        return $this->success($page->only([
+            'id', 'title', 'slug', 'content', 'meta_title', 'meta_description', 'status', 'updated_at',
+        ]));
+    }
+
     public function update(Request $request, int $id): JsonResponse
     {
         $page = Page::findOrFail($id);
